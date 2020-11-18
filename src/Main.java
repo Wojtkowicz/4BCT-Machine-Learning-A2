@@ -17,7 +17,7 @@ public class Main {
         DataPreProcess.ReadInData(testFile);
 
         // Remove ID column
-        DataPreProcess.removeColumnFromDataSet(7);
+        DataPreProcess.removeColumnFromDataSet("beer_id");
 
         // Print out data
         System.out.println(dataSet);

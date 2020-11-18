@@ -54,8 +54,16 @@ public class DataPreProcess {
         return new Row(ID, new ArrayList<>(rowAttributes));
     }
 
-    public static void removeColumnFromDataSet(final int columnIndex){
-        Main.headings.remove(columnIndex);
-        Main.dataSet.forEach(row -> row.removeAttribute(columnIndex));
+    public static void removeColumnFromDataSet(final String columnName){
+        Integer columnIndex = null;
+        for(int i=0; i<Main.headings.size(); i++){
+            if(Main.headings.get(i).equals(columnName)){
+                columnIndex = i;
+                Main.headings.remove(i);
+                break;
+            }
+        }
+        int finalColumnIndex = columnIndex;
+        Main.dataSet.forEach(row -> row.removeAttribute(finalColumnIndex));
     }
 }
