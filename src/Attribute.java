@@ -2,10 +2,11 @@ public class Attribute {
     //Class used holding attribute values of rows
 
     private String name; //Name of the attribute column
-    private double value; //Value of the attribute
+    private String value; //Value of the attribute
 
-    public Attribute(double value){
+    public Attribute(String name, String value){
         this.value = value;
+        this.name = name;
     }
 
     public String getName() {
@@ -16,11 +17,11 @@ public class Attribute {
         this.name = name;
     }
 
-    public double getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(String value) {
         this.value = value;
     }
 

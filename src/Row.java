@@ -4,8 +4,8 @@ public class Row {
     public ArrayList<Attribute> attributes;
     private int ID;
 
-    public Row(int ID){
-        attributes = new ArrayList<>();
+    public Row(int ID, ArrayList<Attribute> attributes){
+        this.attributes = attributes;
         this.ID = ID;
     }
 
@@ -34,6 +34,6 @@ public class Row {
     }
     @Override
     public String toString() {
-        return "Row ID:"+this.ID+" contains attributes:\n";
+        return "\nRow ID:"+this.ID+" contains attributes:\n" + this.attributes;
     }
 }
