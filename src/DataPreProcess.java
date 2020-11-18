@@ -15,7 +15,7 @@ public class DataPreProcess {
             // Line by line convert the line to a row and add to the data set
             while (line != null){
                 // Add Row to data set
-                Main.DataSet.add(lineToRow(line, rowNumber));
+                Main.dataSet.add(lineToRow(line, rowNumber));
                 line = bufferedReader.readLine();
                 rowNumber++;
             }
@@ -52,5 +52,10 @@ public class DataPreProcess {
             index++;
         }
         return new Row(ID, new ArrayList<>(rowAttributes));
+    }
+
+    public static void removeColumnFromDataSet(final int columnIndex){
+        Main.headings.remove(columnIndex);
+        Main.dataSet.forEach(row -> row.removeAttribute(columnIndex));
     }
 }
