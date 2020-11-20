@@ -3,6 +3,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class DataPreProcess {
     // Takes in a text file and populates the DataSet Arraylist with Row objects
@@ -65,5 +69,21 @@ public class DataPreProcess {
         }
         int finalColumnIndex = columnIndex;
         Main.dataSet.forEach(row -> row.removeAttribute(finalColumnIndex));
+    }
+
+    public static void datasetDivision(){
+        //Get size of total dataset and get one third of it
+        int numColumns = Main.dataSet.size();
+        int divider = Math.round(numColumns/3);
+        //Create a list of integers(divider size) of random integers between 0 and max size - 1
+        List<Integer> randomIndex = ThreadLocalRandom.current().ints(0, numColumns-1).boxed().distinct().limit(divider).collect(Collectors.toList());
+        //Loop through dataset and divide values into training or testing datasets
+        for(int i = 0; i < Main.dataSet.size(); i++){
+            if(randomIndex.contains(i)){
+                Main.testingDataset.add(Main.dataSet.get(i));
+            }else{
+                Main.trainingDataset.add(Main.dataSet.get(i));
+            }
+        }
     }
 }

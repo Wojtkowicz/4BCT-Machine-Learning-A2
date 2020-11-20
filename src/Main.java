@@ -8,6 +8,10 @@ public class Main {
     public static final ArrayList<String> headings = new ArrayList<>(Arrays.asList("calorific_value", "nitrogen", "turbidity", "style", "alcohol", "sugars", "bitterness", "beer_id", "colour", "degree_of_fermentation"));
     // global variable to store the imported Data set
     public static ArrayList<Row> dataSet = new ArrayList<>();
+    //global variable to store dataset to be used for training
+    public static ArrayList<Row> trainingDataset = new ArrayList<>();
+    //global variable to store dataset to be used for testing
+    public static ArrayList<Row> testingDataset = new ArrayList<>();
 
     public static void main(String[] args){
         // Create mock file
@@ -21,6 +25,17 @@ public class Main {
 
         // Print out data
         System.out.println(dataSet);
+
+        //Divide data into thirds, one third is testing, two thirds is training.
+        DataPreProcess.datasetDivision();
+        System.out.println(testingDataset.size());
+        System.out.println(trainingDataset.size());
+        System.out.println(dataSet.size());
+
+        // Test data to find threshold
+        ArrayList<String> resultsData = new ArrayList<>(Arrays.asList("Ale", "Ale", "Stout", "Ale", "Lager", "Stout"));
+        ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
+        System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, resultsData));
     }
 
 }
