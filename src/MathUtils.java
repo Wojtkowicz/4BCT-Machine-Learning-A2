@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MathUtils {
 
@@ -99,20 +100,24 @@ public class MathUtils {
     }
 
     // Goes through each value and performs information gain calculation on it then returns the highest value
-    public static double calculateOptimalThreshold(final ArrayList<Double> data, final ArrayList<String> resultsData) {
+    public static ArrayList<Double> calculateOptimalThreshold(final ArrayList<Double> data, final Column column) {
         double highestInformationGain = 0;
+        double highestInformationGainOrigin = 0;
         double informationGain = 0;
+        ArrayList<String> resultData = new ArrayList<>();
+        column.attributes.forEach(a -> resultData.add(a.getValue()));
         // For each value
         for(int i=0; i<data.size(); i++){
             // Calculate the gain
-            informationGain = calculateInformationGain(data.get(i), data, resultsData);
+            informationGain = calculateInformationGain(data.get(i), data, resultData);
             // If new gain is bigger than highest gain, set highest gain to new gain
             if(informationGain > highestInformationGain){
                 highestInformationGain = informationGain;
+                highestInformationGainOrigin = data.get(i);
             }
         }
         // Return highest gain / threshold
-        return highestInformationGain;
+        return new ArrayList(Arrays.asList(highestInformationGainOrigin, highestInformationGain));
     }
 
     // Calculates log base 2
