@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -85,5 +84,25 @@ public class DataPreProcess {
                 Main.trainingDataset.add(Main.dataSet.get(i));
             }
         }
+    }
+
+    //Returns a column arraylist of a specific row arraylist attribute index (Continuous)
+    public static ArrayList<Attribute> rowIntoAttributeCol(ArrayList<Row> row, int index){
+        ArrayList<Attribute> col = new ArrayList<>();
+        for(int i = 0; i < row.size(); i++){
+            col.add((row.get(i).attributes.get(index)));
+        }
+        return col;
+    }
+    //Checks if a string contains a number
+    public static boolean containsNumber(String s){
+        char[] characters = s.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for(char c: characters){
+            if(Character.isDigit(c)){
+                return true;
+            }
+        }
+        return false;
     }
 }

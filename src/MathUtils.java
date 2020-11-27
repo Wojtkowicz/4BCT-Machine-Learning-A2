@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class MathUtils {
 
@@ -22,107 +22,116 @@ public class MathUtils {
         }
     }
 
+    // Calculates Entropy of the two possible results (no, yes)
+    public static double calculateSingularEntropy(final double noCount, final double yesCount) {
+        double totalCount = noCount + yesCount;
+        double pNo = noCount / totalCount;
+        double pYes = yesCount / totalCount;
+        double log2pNo = log2(pNo);
+        double log2pYes = log2(pYes);
+
+        double answer = (- pNo * log2pNo - pYes * log2pYes);
+
+        if (Double.isNaN(answer)) {
+            return 0d;
+        } else {
+            return answer;
+        }
+    }
+
+
+
     public static double calculateInformationGain(final double value, final ArrayList<Double> column, final ArrayList<String> resultsColumn) {
-        int aleCount = 0;
-        int lagerCount = 0;
-        int stoutCount = 0;
+        int aleCountLessThan = 0;
+        int lagerCountLessThan = 0;
+        int stoutCountLessThan = 0;
+        int aleCountMoreThan = 0;
+        int lagerCountMoreThan = 0;
+        int stoutCountMoreThan = 0;
         double entropyLessThanValueCount = 0;
         double entropyMoreThanValueCount = 0;
         int columnSize = column.size();
 
-        // Count amount of ale, lager and stout results when column value <= value
+        // For each value in the column
         for (int i = 0; i < columnSize;  i++) {
+            // Count amount of ale, lager and stout results when column value <= value
             if (column.get(i) <= value) {
                 entropyLessThanValueCount++;
                 switch (resultsColumn.get(i)) {
                     case "Ale":
-                        aleCount++;
+                        aleCountLessThan++;
                         break;
                     case "Lager":
-                        lagerCount++;
+                        lagerCountLessThan++;
                         break;
                     case "Stout":
-                        stoutCount++;
+                        stoutCountLessThan++;
                         break;
                 }
             }
-        }
-
-        // Calculate entropy of values less than value
-        double entropyLessThanValue = calculateEntropy(aleCount, lagerCount, stoutCount);
-
-        // Reset count
-        aleCount = 0;
-        lagerCount = 0;
-        stoutCount = 0;
-
-        // Count amount of ale, lager and stout results when column value > value
-        for (int i = 0; i < columnSize; i++) {
-            if (column.get(i) > value) {
+            // Count amount of ale, lager and stout results when column value > value
+            else if(column.get(i) > value){
                 entropyMoreThanValueCount++;
                 switch (resultsColumn.get(i)) {
                     case "Ale":
-                        aleCount++;
+                        aleCountMoreThan++;
                         break;
                     case "Lager":
-                        lagerCount++;
+                        lagerCountMoreThan++;
                         break;
                     case "Stout":
-                        stoutCount++;
+                        stoutCountMoreThan++;
                         break;
                 }
             }
         }
 
         // Calculate entropy of values less than value
-        double entropyMoreThanValue = calculateEntropy(aleCount, lagerCount, stoutCount);
+        double entropyLessThanValue = calculateEntropy(aleCountLessThan, lagerCountLessThan, stoutCountLessThan);
 
-        // Reset count
-        aleCount = 0;
-        lagerCount = 0;
-        stoutCount = 0;
-
-        // Count amount of ale, lager and stout results for all column values
-        for (int i = 0; i < columnSize; i++) {
-            switch (resultsColumn.get(i)) {
-                case "Ale":
-                    aleCount++;
-                    break;
-                case "Lager":
-                    lagerCount++;
-                    break;
-                case "Stout":
-                    stoutCount++;
-                    break;
-            }
-        }
+        // Calculate entropy of values more than value
+        double entropyMoreThanValue = calculateEntropy(aleCountMoreThan, lagerCountMoreThan, stoutCountMoreThan);
 
         // Calculate entropy of all values
-        double globalEntropy = calculateEntropy(aleCount, lagerCount, stoutCount);
+        double globalEntropy = calculateEntropy((aleCountLessThan + aleCountMoreThan), (lagerCountLessThan + lagerCountMoreThan), (stoutCountLessThan + stoutCountMoreThan));
 
         // Calculate and return information gain
-        return globalEntropy - (entropyLessThanValueCount / columnSize) * (entropyLessThanValue) - (entropyMoreThanValueCount / columnSize) * (entropyMoreThanValue);
+        return (globalEntropy - (entropyLessThanValueCount / columnSize) * (entropyLessThanValue) - (entropyMoreThanValueCount / columnSize) * (entropyMoreThanValue));
     }
 
-    // Goes through each value and performs information gain calculation on it then returns the highest vaalue
-    public static double calculateOptimalThreshold(final ArrayList<Double> data, final ArrayList<String> resultsData) {
+    // Goes through each value and performs information gain calculation on it then returns the highest value
+    public static ArrayList<Double> calculateOptimalThreshold(final ArrayList<Double> data, final Column column) {
         double highestInformationGain = 0;
+        double highestInformationGainOrigin = 0;
         double informationGain = 0;
+        ArrayList<String> resultData = new ArrayList<>();
+        column.attributes.forEach(a -> resultData.add(a.getValue()));
         // For each value
         for(int i=0; i<data.size(); i++){
             // Calculate the gain
-            informationGain = calculateInformationGain(data.get(i), data, resultsData);
+            informationGain = calculateInformationGain(data.get(i), data, resultData);
             // If new gain is bigger than highest gain, set highest gain to new gain
             if(informationGain > highestInformationGain){
                 highestInformationGain = informationGain;
+                highestInformationGainOrigin = data.get(i);
             }
         }
         // Return highest gain / threshold
-        return highestInformationGain;
+        return new ArrayList(Arrays.asList(highestInformationGainOrigin, highestInformationGain));
     }
 
     // Calculates log base 2
     public static double log2(double x) {
         return (Math.log(x) / Math.log(2));
+    }
+
+    public static int countAttribute(Column data, String attributeToCount){
+        int numAttribute = 0;
+        for(int i =0; i < data.attributes.size(); i++){
+            if(data.attributes.get(i).getValue().equals(attributeToCount)){
+                numAttribute++;
+            }
+        }
+        return numAttribute;
     }
 }

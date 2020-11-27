@@ -33,9 +33,27 @@ public class Main {
         System.out.println(dataSet.size());
 
         // Test data to find threshold
-        ArrayList<String> resultsData = new ArrayList<>(Arrays.asList("Ale", "Ale", "Stout", "Ale", "Lager", "Stout"));
+        ArrayList<Attribute> resultsData = new ArrayList<>(Arrays.asList(
+                new Attribute("Style","Ale"),
+                new Attribute("Style","Ale"),
+                new Attribute("Style","Stout"),
+                new Attribute("Style","Ale"),
+                new Attribute("Style","Lager"),
+                new Attribute("Style","Stout")));
+
+        Column column = new Column(1, resultsData);
         ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
-        System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, resultsData));
+        System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, column));
+
+        //Algorithm
+        Algorithm c45 = new Algorithm();
+        //Convert to columns
+        ArrayList<Column> columns = new ArrayList<>();
+        for(int i =0; i < trainingDataset.get(0).attributes.size(); i++){
+            Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(trainingDataset, i));
+            columns.add(col);
+        }
+        c45.startTreeBuilding(3, columns);
     }
 
 }
