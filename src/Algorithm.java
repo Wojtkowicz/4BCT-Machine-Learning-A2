@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Algorithm {
 
@@ -25,25 +26,39 @@ public class Algorithm {
         double maxGainRatio = 0.0;
         //Calculate conditional entropy for each attribute
         for (int i = 0; i < currentDataset.size(); i++) {
-            double conditionalEntropy;
-            double variableEntropy;
-            double gainRatio;
-            String bestVar = "";
             //if true => continuous, false => discrete
             if (DataPreProcess.containsNumber(currentDataset.get(i).attributes.get(0).getValue())) {
                 ArrayList<Double> doubleCol = new ArrayList<>();
                 for (int j = 0; j < currentDataset.get(i).attributes.size(); j++) {
                     doubleCol.add(Double.parseDouble(currentDataset.get(i).attributes.get(j).getValue()));
                 }
-                MathUtils.calculateOptimalThreshold(doubleCol, style);
+                //0 -> origin , 1-> gain
+                ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, style);
+                if(gain.get(1) >= maxGainRatio){
+                    maxGainRatio = gain.get(1);
+                    attributeValueWithHighestGain = gain.get(0).toString();
+                    attributeWithHighestGain = currentDataset.get(i).attributes.get(0).getName();
+                }
             } else {
                 //discrete entropy calculation
             }
         }
+
         return new Node();
     }
 
     private Node createleafNode(ArrayList<Column> dataSet, String value) {
         return new Node();
+    }
+
+    private ArrayList<Column> addBasedOnPartition(ArrayList<Column> dataSet, String splitValue, String highestGainAttribute){
+        ArrayList<Column> data = dataSet;
+        int size = dataSet.size();
+        for(int i =0; i < dataSet.size(); i++){
+            for(int j = 0; j < dataSet.get(0).attributes.size(); j++){
+
+            }
+        }
+
     }
 }
