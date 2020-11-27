@@ -40,10 +40,10 @@ public class Main {
         //Algorithm
         Algorithm c45 = new Algorithm();
         //Convert to columns
-        ArrayList<Row> columns = new ArrayList<>();
+        ArrayList<Column> columns = new ArrayList<>();
         for(int i =0; i < trainingDataset.get(0).attributes.size(); i++){
-            Row row = new Row(i, DataPreProcess.rowIntoAttributeCol(trainingDataset, i));
-            columns.add(row);
+            Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(trainingDataset, i));
+            columns.add(col);
         }
         c45.startTreeBuilding(3, columns);
     }

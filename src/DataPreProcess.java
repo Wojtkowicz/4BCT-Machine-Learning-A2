@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-import static jdk.internal.math.FloatingDecimal.parseDouble;
 
 public class DataPreProcess {
     // Takes in a text file and populates the DataSet Arraylist with Row objects
