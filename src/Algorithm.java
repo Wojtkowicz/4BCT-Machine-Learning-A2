@@ -3,11 +3,10 @@ import java.util.Iterator;
 
 public class Algorithm {
 
-    private Column style;//Column of class attribute (Style)
-
     public Node startTreeBuilding(int classIndex, ArrayList<Column> dataset) {
-        style = dataset.get(classIndex); //Put class into separate column
+        Column style = dataset.get(classIndex); //Put class into separate column
         dataset.remove(classIndex); //Remove class index from dataset
+        dataset.add(style); //add style to the end
         return subTreeBuild(dataset, 0, null); //start building tree
     }
 
@@ -16,16 +15,15 @@ public class Algorithm {
         ArrayList<Column> currentDataset = dataSet;
         //Exit case for recursion
         if (currentDataset.get(0).attributes.size() <= 1 || depth >= 5) {
-            return createLeafNode(currentDataset, value);
+            return createLeafNode(currentDataset);
         }
-        //Calculate entropy of entire dataset
-        double globalEntropy = MathUtils.calculateEntropy(MathUtils.countAttribute(style, "ale"), MathUtils.countAttribute(style, "lager"), MathUtils.countAttribute(style, "stout"));
         //Prepare variables for gain calculation
         String attributeWithHighestGain = "";
-        String attributeValueWithHighestGain = "";
+        double attributeValueWithHighestGain = 0.0;
         double maxGainRatio = 0.0;
+        double splitValue = 0;
         //Calculate conditional entropy for each attribute
-        for (int i = 0; i < currentDataset.size(); i++) {
+        for (int i = 0; i < currentDataset.size()-1; i++) {
             //if true => continuous, false => discrete
             if (DataPreProcess.containsNumber(currentDataset.get(i).attributes.get(0).getValue())) {
                 ArrayList<Double> doubleCol = new ArrayList<>();
@@ -33,21 +31,28 @@ public class Algorithm {
                     doubleCol.add(Double.parseDouble(currentDataset.get(i).attributes.get(j).getValue()));
                 }
                 //0 -> origin , 1-> gain
-                ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, style);
+                ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, currentDataset.get(currentDataset.size()-1));
                 if (gain.get(1) >= maxGainRatio) {
                     maxGainRatio = gain.get(1);
-                    attributeValueWithHighestGain = gain.get(0).toString();
+                    attributeValueWithHighestGain = gain.get(0);
                     attributeWithHighestGain = currentDataset.get(i).attributes.get(0).getName();
                 }
             } else {
                 //discrete entropy calculation
             }
         }
+        if(maxGainRatio == 0.0){
+            createLeafNode(currentDataset);
+        }
+        //Create datasets for children
+        ArrayList<Column> leftDataSet = addBasedOnPartition(currentDataset, attributeValueWithHighestGain, attributeWithHighestGain, "Left");
+        ArrayList<Column> rightDataSet = addBasedOnPartition(currentDataset, attributeValueWithHighestGain, attributeWithHighestGain, "Right");
+
 
         return new Node();
     }
 
-    private Node createLeafNode(ArrayList<Column> dataSet, String value) {
+    private Node createLeafNode(ArrayList<Column> dataSet) {
         return new Node();
     }
 
@@ -74,6 +79,7 @@ public class Algorithm {
                         }
                     }
                 }
+                break;
             }
         }
 
