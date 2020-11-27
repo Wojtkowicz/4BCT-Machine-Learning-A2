@@ -119,4 +119,14 @@ public class MathUtils {
     public static double log2(double x) {
         return (Math.log(x) / Math.log(2));
     }
+
+    public static int countAttribute(Row data, String attributeToCount){
+        int numAttribute = 0;
+        for(int i =0; i < data.attributes.size(); i++){
+            if(data.attributes.get(i).getValue().equals(attributeToCount)){
+                numAttribute++;
+            }
+        }
+        return numAttribute;
+    }
 }

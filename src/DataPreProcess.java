@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static jdk.internal.math.FloatingDecimal.parseDouble;
+
 public class DataPreProcess {
     // Takes in a text file and populates the DataSet Arraylist with Row objects
     public static void ReadInData(final File file){
@@ -85,5 +87,25 @@ public class DataPreProcess {
                 Main.trainingDataset.add(Main.dataSet.get(i));
             }
         }
+    }
+
+    //Returns a column arraylist of a specific row arraylist attribute index (Continuous)
+    public static ArrayList<Attribute> rowIntoAttributeCol(ArrayList<Row> row, int index){
+        ArrayList<Attribute> col = new ArrayList<>();
+        for(int i = 0; i < row.size(); i++){
+            col.add((row.get(i).attributes.get(index)));
+        }
+        return col;
+    }
+    //Checks if a string contains a number
+    public static boolean containsNumber(String s){
+        char[] characters = s.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for(char c: characters){
+            if(Character.isDigit(c)){
+                return true;
+            }
+        }
+        return false;
     }
 }
