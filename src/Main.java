@@ -35,7 +35,7 @@ public class Main {
         // Test data to find threshold
         ArrayList<String> resultsData = new ArrayList<>(Arrays.asList("Ale", "Ale", "Stout", "Ale", "Lager", "Stout"));
         ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
-        System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, resultsData));
+        //System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, resultsData));
 
         //Algorithm
         Algorithm c45 = new Algorithm();
