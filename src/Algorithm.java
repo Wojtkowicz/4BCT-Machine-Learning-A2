@@ -16,7 +16,7 @@ public class Algorithm {
         ArrayList<Column> currentDataset = dataSet;
         //Exit case for recursion
         if (currentDataset.get(0).attributes.size() <= 1 || depth >= 5) {
-            return createleafNode(currentDataset, value);
+            return createLeafNode(currentDataset, value);
         }
         //Calculate entropy of entire dataset
         double globalEntropy = MathUtils.calculateEntropy(MathUtils.countAttribute(style, "ale"), MathUtils.countAttribute(style, "lager"), MathUtils.countAttribute(style, "stout"));
@@ -34,7 +34,7 @@ public class Algorithm {
                 }
                 //0 -> origin , 1-> gain
                 ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, style);
-                if(gain.get(1) >= maxGainRatio){
+                if (gain.get(1) >= maxGainRatio) {
                     maxGainRatio = gain.get(1);
                     attributeValueWithHighestGain = gain.get(0).toString();
                     attributeWithHighestGain = currentDataset.get(i).attributes.get(0).getName();
@@ -47,18 +47,45 @@ public class Algorithm {
         return new Node();
     }
 
-    private Node createleafNode(ArrayList<Column> dataSet, String value) {
+    private Node createLeafNode(ArrayList<Column> dataSet, String value) {
         return new Node();
     }
 
-    private ArrayList<Column> addBasedOnPartition(ArrayList<Column> dataSet, String splitValue, String highestGainAttribute){
-        ArrayList<Column> data = dataSet;
-        int size = dataSet.size();
-        for(int i =0; i < dataSet.size(); i++){
-            for(int j = 0; j < dataSet.get(0).attributes.size(); j++){
+    public ArrayList<Column> addBasedOnPartition(ArrayList<Column> dataSet, double splitValue, String highestGainAttribute, String Child) {
+        ArrayList<Column> resultData = new ArrayList<>();
+        int columnSize = dataSet.get(0).attributes.size();
+        int columnNumber = dataSet.size();
+        ArrayList<Integer> rowPositionsToAdd = new ArrayList<>();
 
+        // filter only rows with certain value
+        for (int i = 0; i < columnNumber; i++) {
+            if (dataSet.get(i).attributes.get(0).getName().equals(highestGainAttribute)) {
+
+                if (Child.equals("Left")) {
+                    for (int j = 0; j < columnSize; j++) {
+                        if (Double.parseDouble(dataSet.get(i).attributes.get(j).getValue()) <= splitValue) {
+                            rowPositionsToAdd.add(j);
+                        }
+                    }
+                } else {
+                    for (int j = 0; j < columnSize; j++) {
+                        if (Double.parseDouble(dataSet.get(i).attributes.get(j).getValue()) > splitValue) {
+                            rowPositionsToAdd.add(j);
+                        }
+                    }
+                }
             }
         }
 
+        for (int i = 0; i < columnNumber; i++) {
+            Column temp = new Column(i);
+            for (int j = 0; j < columnSize; j++) {
+                if (rowPositionsToAdd.contains(j)) {
+                    temp.addAttribute(dataSet.get(i).attributes.get(j));
+                }
+            }
+            resultData.add(temp);
+        }
+        return resultData;
     }
 }

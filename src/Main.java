@@ -54,6 +54,10 @@ public class Main {
             columns.add(col);
         }
         c45.startTreeBuilding(3, columns);
+
+
+        System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Left"));
+        System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Right"));
     }
 
 }

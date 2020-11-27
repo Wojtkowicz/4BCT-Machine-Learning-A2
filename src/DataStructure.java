@@ -9,6 +9,10 @@ public abstract class DataStructure {
         this.attributes = attributes;
         this.ID = ID;
     }
+    public DataStructure(int ID){
+        this.ID = ID;
+        attributes = new ArrayList<>();
+    }
 
     public int getID() {
         return ID;
