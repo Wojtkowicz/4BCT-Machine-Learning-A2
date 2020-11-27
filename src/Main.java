@@ -24,25 +24,27 @@ public class Main {
         DataPreProcess.removeColumnFromDataSet("beer_id");
 
         // Print out data
-        System.out.println(dataSet);
+        //System.out.println(dataSet);
 
         //Divide data into thirds, one third is testing, two thirds is training.
         DataPreProcess.datasetDivision();
-        System.out.println(testingDataset.size());
-        System.out.println(trainingDataset.size());
-        System.out.println(dataSet.size());
+        //System.out.println(testingDataset.size());
+        //System.out.println(trainingDataset.size());
+        //System.out.println(dataSet.size());
 
         // Test data to find threshold
         ArrayList<Attribute> resultsData = new ArrayList<>(Arrays.asList(
-                new Attribute("Style","Ale"),
-                new Attribute("Style","Ale"),
-                new Attribute("Style","Stout"),
-                new Attribute("Style","Ale"),
-                new Attribute("Style","Lager"),
-                new Attribute("Style","Stout")));
+                new Attribute("Style","ale"),
+                new Attribute("Style","ale"),
+                new Attribute("Style","stout"),
+                new Attribute("Style","ale"),
+                new Attribute("Style","lager"),
+                new Attribute("Style","stout")));
 
         Column column = new Column(1, resultsData);
+        System.out.println("Col: "+column);
         ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
+        System.out.println(data);
         System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, column));
 
         //Algorithm
@@ -53,11 +55,11 @@ public class Main {
             Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(trainingDataset, i));
             columns.add(col);
         }
-        c45.startTreeBuilding(3, columns);
+        //Node root = c45.startTreeBuilding(3, columns);
+        //System.out.println(root);
 
-
-        System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Left"));
-        System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Right"));
+        //System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Left"));
+        //System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Right"));
     }
 
 }

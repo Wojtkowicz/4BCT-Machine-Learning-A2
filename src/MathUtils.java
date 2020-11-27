@@ -58,13 +58,13 @@ public class MathUtils {
             if (column.get(i) <= value) {
                 entropyLessThanValueCount++;
                 switch (resultsColumn.get(i)) {
-                    case "Ale":
+                    case "ale":
                         aleCountLessThan++;
                         break;
-                    case "Lager":
+                    case "lager":
                         lagerCountLessThan++;
                         break;
-                    case "Stout":
+                    case "stout":
                         stoutCountLessThan++;
                         break;
                 }
@@ -73,13 +73,13 @@ public class MathUtils {
             else if(column.get(i) > value){
                 entropyMoreThanValueCount++;
                 switch (resultsColumn.get(i)) {
-                    case "Ale":
+                    case "ale":
                         aleCountMoreThan++;
                         break;
-                    case "Lager":
+                    case "lager":
                         lagerCountMoreThan++;
                         break;
-                    case "Stout":
+                    case "stout":
                         stoutCountMoreThan++;
                         break;
                 }
