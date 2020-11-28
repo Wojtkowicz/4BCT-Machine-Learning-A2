@@ -42,25 +42,43 @@ public class Main {
                 new Attribute("Style","stout")));
 
         Column column = new Column(1, resultsData);
-        System.out.println("Col: "+column);
+        //System.out.println("Col: "+column);
         ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
-        System.out.println(data);
-        System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, column));
+        //System.out.println(data);
+        //System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, column));
 
         //Algorithm
         Algorithm c45 = new Algorithm();
         //Convert to columns
         ArrayList<Column> columns = new ArrayList<>();
-        for(int i =0; i < trainingDataset.get(0).attributes.size(); i++){
-            Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(trainingDataset, i));
+
+        for(int i =0; i < dataSet.get(0).attributes.size(); i++){
+            Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(dataSet, i));
             columns.add(col);
         }
-        //Node root = c45.startTreeBuilding(3, columns);
-        //System.out.println(root);
+
+        Node root = c45.startTreeBuilding(3, columns);
+        System.out.println("--------------------------------------------------------------");
+
+        // Print tree
+            System.out.println("                         " + root.getName());
+            printNode(root, 1);
+
+
+
 
         //System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Left"));
         //System.out.println(c45.addBasedOnPartition(columns, 9, "colour", "Right"));
     }
 
+    private static void printNode(final Node node, int depth){
+        if(node.getLeftChild() != null) {
+            System.out.println("                          /   \\  \n                         /     \\");
+            System.out.println("                    " + node.getLeftChild().getName() + "   " + node.getRightChild().getName());
+        }
+
+        if(node.getLeftChild() != null)
+        printNode(node.getLeftChild(), depth+1);
+    }
 }
 

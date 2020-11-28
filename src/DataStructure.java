@@ -40,6 +40,6 @@ public abstract class DataStructure {
 
     @Override
     public String toString() {
-        return "\nRow ID:" + this.ID + " contains attributes:\n" + this.attributes;
+        return "\nID:" + this.ID + " contains attributes:\n" + this.attributes;
     }
 }

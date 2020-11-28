@@ -33,12 +33,7 @@ public class Algorithm {
                 }
                 //0 -> origin , 1-> gain
                 ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, currentDataset.get(currentDataset.size()-1));
-                System.out.println("-----------------------------");
-                System.out.println(doubleCol);
-                System.out.println(currentDataset.get(currentDataset.size()-1));
-                System.out.println(gain);
-                System.out.println("-----------------------------");
-                if (gain.get(1) >= maxGainRatio) {
+                if (gain.get(1) > maxGainRatio) {
                     maxGainRatio = gain.get(1);
                     attributeValueWithHighestGain = gain.get(0);
                     attributeWithHighestGain = currentDataset.get(i).attributes.get(0).getName();
@@ -48,7 +43,6 @@ public class Algorithm {
             }
         }
         if(maxGainRatio == 0.0){
-            System.out.println("Max Gain Ratio is 0");
             return createLeafNode(currentDataset);
         }
         //Create datasets for children
@@ -79,7 +73,6 @@ public class Algorithm {
 
 
         }
-        System.out.println("Ale: "+aleCount+" Stout: "+stoutCount+" Lager: "+lagerCount+"\n--------------------");
         if(aleCount >= stoutCount && aleCount >= lagerCount){
             leaf.setName("ale");
             leaf.setValue(null);
@@ -91,7 +84,7 @@ public class Algorithm {
             leaf.setLeftChild(null);
             leaf.setRightChild(null);
         }else if(lagerCount >= aleCount && lagerCount >= stoutCount){
-            leaf.setName("stout");
+            leaf.setName("lager");
             leaf.setValue(null);
             leaf.setLeftChild(null);
             leaf.setRightChild(null);
@@ -138,8 +131,6 @@ public class Algorithm {
             resultData.add(temp);
 
         }
-        System.out.println("ResultsData:: ");
-        System.out.println(resultData);
         return resultData;
     }
 }

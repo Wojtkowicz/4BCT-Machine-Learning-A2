@@ -48,6 +48,7 @@ public class MathUtils {
         int aleCountMoreThan = 0;
         int lagerCountMoreThan = 0;
         int stoutCountMoreThan = 0;
+
         double entropyLessThanValueCount = 0;
         double entropyMoreThanValueCount = 0;
         int columnSize = column.size();
@@ -85,15 +86,48 @@ public class MathUtils {
                 }
             }
         }
+        int totalAleCount = aleCountLessThan + aleCountMoreThan;
+        int totalLagerCount = lagerCountLessThan + lagerCountMoreThan;
+        int totalStoutCount = stoutCountLessThan + stoutCountMoreThan;
+        double entropyLessThanValue = 0;
+        double entropyMoreThanValue = 0;
+        double globalEntropy = 0;
 
-        // Calculate entropy of values less than value
-        double entropyLessThanValue = calculateEntropy(aleCountLessThan, lagerCountLessThan, stoutCountLessThan);
+        if(totalAleCount == 0){
+            // Calculate entropy of values less than value
+            entropyLessThanValue = calculateSingularEntropy(lagerCountLessThan, stoutCountLessThan);
+            // Calculate entropy of values more than value
+            entropyMoreThanValue = calculateSingularEntropy(lagerCountMoreThan, stoutCountMoreThan);
+            // Calculate entropy of all values
+            globalEntropy = calculateSingularEntropy(totalLagerCount, totalStoutCount);
 
-        // Calculate entropy of values more than value
-        double entropyMoreThanValue = calculateEntropy(aleCountMoreThan, lagerCountMoreThan, stoutCountMoreThan);
+        }
+        else if(totalLagerCount == 0){
+            // Calculate entropy of values less than value
+            entropyLessThanValue = calculateSingularEntropy(aleCountLessThan, stoutCountLessThan);
+            // Calculate entropy of values more than value
+            entropyMoreThanValue = calculateSingularEntropy(aleCountMoreThan, stoutCountMoreThan);
+            // Calculate entropy of all values
+            globalEntropy = calculateSingularEntropy(totalLagerCount, totalStoutCount);
+        }
+        else if(totalStoutCount == 0){
+            // Calculate entropy of values less than value
+            entropyLessThanValue = calculateSingularEntropy(aleCountLessThan, stoutCountLessThan);
+            // Calculate entropy of values more than value
+            entropyMoreThanValue = calculateSingularEntropy(aleCountMoreThan, stoutCountMoreThan);
+            // Calculate entropy of all values
+            globalEntropy = calculateSingularEntropy(totalLagerCount, totalStoutCount);
+        }
+        else{
+            // Calculate entropy of values less than value
+            entropyLessThanValue = calculateEntropy(aleCountLessThan, lagerCountLessThan, stoutCountLessThan);
 
-        // Calculate entropy of all values
-        double globalEntropy = calculateEntropy((aleCountLessThan + aleCountMoreThan), (lagerCountLessThan + lagerCountMoreThan), (stoutCountLessThan + stoutCountMoreThan));
+            // Calculate entropy of values more than value
+            entropyMoreThanValue = calculateEntropy(aleCountMoreThan, lagerCountMoreThan, stoutCountMoreThan);
+
+            // Calculate entropy of all values
+            globalEntropy = calculateEntropy((aleCountLessThan + aleCountMoreThan), (lagerCountLessThan + lagerCountMoreThan), (stoutCountLessThan + stoutCountMoreThan));
+        }
 
         // Calculate and return information gain
         return (globalEntropy - (entropyLessThanValueCount / columnSize) * (entropyLessThanValue) - (entropyMoreThanValueCount / columnSize) * (entropyMoreThanValue));
