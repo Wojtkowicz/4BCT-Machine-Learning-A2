@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class Algorithm {
@@ -32,7 +33,7 @@ public class Algorithm {
                     doubleCol.add(Double.parseDouble(currentDataset.get(i).attributes.get(j).getValue()));
                 }
                 //0 -> origin , 1-> gain
-                ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, currentDataset.get(currentDataset.size()-1));
+                ArrayList<Double> gain = MathUtils.calculateInformationGainRatio(doubleCol, currentDataset.get(currentDataset.size()-1));
                 if (gain.get(1) > maxGainRatio) {
                     maxGainRatio = gain.get(1);
                     attributeValueWithHighestGain = gain.get(0);
@@ -40,6 +41,8 @@ public class Algorithm {
                 }
             } else {
                 //discrete entropy calculation
+                System.out.println("Algorithm does not support discrete values");
+                return new Node();
             }
         }
         if(maxGainRatio == 0.0){
@@ -132,5 +135,32 @@ public class Algorithm {
 
         }
         return resultData;
+    }
+
+    public ArrayList<String> traverseTreeForTesting(Node root, Row rowToTest){
+        Node testNode = root;
+        while(testNode.getValue()!=null){
+            String attribute = testNode.getName();
+            for(int i = 0; i < rowToTest.attributes.size(); i++){
+                if(rowToTest.attributes.get(i).getName().equals(attribute)){
+                    if(Double.parseDouble(rowToTest.attributes.get(i).getValue()) > Double.parseDouble(testNode.getValue())){
+                        if(testNode.getRightChild() != null){
+                            testNode = testNode.getRightChild();
+                        }else{
+                            break;
+                        }
+                    }else if(Double.parseDouble(rowToTest.attributes.get(i).getValue()) <= Double.parseDouble(testNode.getValue())){
+                        if(testNode.getLeftChild() != null){
+                            testNode = testNode.getLeftChild();
+                        }else{
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        //At leaf node
+        return new ArrayList(Arrays.asList(testNode.getName(), rowToTest.attributes.get(3).getValue()));
+
     }
 }

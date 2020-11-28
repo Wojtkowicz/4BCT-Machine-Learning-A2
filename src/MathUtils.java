@@ -168,4 +168,62 @@ public class MathUtils {
         }
         return numAttribute;
     }
+
+    //Calculate the information gain ratio based on arraylist of a column of attributes and column of class attributes
+    public static ArrayList<Double> calculateInformationGainRatio(final ArrayList<Double> data, final Column column){
+
+        double highestInformationGainRatio = 0;
+        double highestInformationGainRatioOrigin = 0;
+        double informationGain = 0;
+        double splitInfo = 0;
+        double informationGainRatio = 0;
+        ArrayList<String> resultData = new ArrayList<>();
+        column.attributes.forEach(a -> resultData.add(a.getValue()));
+        // For each value
+        for(int i=0; i<data.size(); i++){
+            // Calculate the gain
+            informationGain = calculateInformationGain(data.get(i), data, resultData);
+
+            //Calculate split info
+            splitInfo = calculateSplitInformation(data, data.get(i));
+            //calculate information gain ratio formula = gain / split info
+            informationGainRatio = informationGain/splitInfo;
+            // If new gain is bigger than highest gain, set highest gain to new gain
+            if(informationGainRatio > highestInformationGainRatio){
+                highestInformationGainRatio = informationGain;
+                highestInformationGainRatioOrigin = data.get(i);
+            }
+        }
+        return new ArrayList(Arrays.asList(highestInformationGainRatioOrigin, highestInformationGainRatio));
+    }
+
+    //Method for calculating split information based on column of double attributes and threshold value
+    public static double calculateSplitInformation(final ArrayList<Double> column, final Double threshold){
+
+        int totalNumAttributes = column.size();
+        int numAttributesMoreThan = 0; //number of attributes more than threshold
+        int numAttributesLessThan = 0; //number of attributes less than threshold
+        double splitInfo = 0d; //split information to return
+
+        //Get attribute numbers in relation to threshold
+        for(int i = 0; i < totalNumAttributes; i++){
+            if(column.get(i) > threshold){
+                numAttributesMoreThan++;
+            }else if(column.get(i) <= threshold){
+                numAttributesLessThan++;
+            }else{
+                System.out.println("Error in Calculation of Split Value Info with value of: "+column.get(i));
+            }
+        }
+        double firstLog = log2(numAttributesLessThan);
+        double secondLog = log2(numAttributesMoreThan);
+        double totalLog = log2(totalNumAttributes);
+
+        double calculationLog1 = firstLog - totalLog;
+        double calculationLog2 = secondLog - totalLog;
+
+        //Calculate splitInfo where formula = -(less than threshold/total)*log2(less than threshold/total)-(more than threshold/total)*log2(more than threshold/total)
+        splitInfo = -(((double)numAttributesLessThan/totalNumAttributes))*calculationLog1-(((double)numAttributesMoreThan/totalNumAttributes))*calculationLog2;
+        return splitInfo;
+    }
 }

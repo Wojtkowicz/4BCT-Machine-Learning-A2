@@ -58,6 +58,7 @@ public class Main {
         }
 
         Node root = c45.startTreeBuilding(3, columns);
+        System.out.println(c45.traverseTreeForTesting(root, trainingDataset.get(0)));
         System.out.println("--------------------------------------------------------------");
 
         // Print tree
@@ -80,5 +81,6 @@ public class Main {
         if(node.getLeftChild() != null)
         printNode(node.getLeftChild(), depth+1);
     }
+
 }
 
