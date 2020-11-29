@@ -164,7 +164,7 @@ public class Algorithm {
 
     }
 
-    public void confusionMatrix(ArrayList<ArrayList> input){
+    public int[][] confusionMatrix(ArrayList<ArrayList> input){
         int [][] confusionMatrix = new int[3][3];
         //Set up confusion Matrix
         for(int i = 0; i < input.size(); i++){
@@ -190,7 +190,7 @@ public class Algorithm {
                 } else if (input.get(i).get(0).equals("stout")) {
                     confusionMatrix[1][2] += 1;
                 } else if (input.get(i).get(0).equals("lager")) {
-                    confusionMatrix[1][2] += 1;
+                    confusionMatrix[2][2] += 1;
                 }
             }
 
@@ -200,7 +200,19 @@ public class Algorithm {
         System.out.println("[ale]   "+Arrays.toString(confusionMatrix[0]));
         System.out.println("[stout] " +Arrays.toString(confusionMatrix[1]));
         System.out.println("[lager] " +Arrays.toString(confusionMatrix[2]));
-        return;
-    }
 
+        return confusionMatrix;
+    }
+    public double errorRate(int[][] confusionMatrix){
+        int error = confusionMatrix[1][0] + confusionMatrix[2][0] + confusionMatrix[0][1] + confusionMatrix[2][1] + confusionMatrix[0][2] + confusionMatrix[1][2];
+        int total = 0;
+        for(int[] matrix: confusionMatrix){
+            for(int i: matrix){
+                total+=i;
+            }
+        }
+        System.out.println("error = "+error +"/ total = "+total);
+        double errorRate = (double) error / total;
+        return errorRate;
+    }
 }

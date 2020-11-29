@@ -62,7 +62,8 @@ public class Main {
         for(int i = 0; i < trainingDataset.size(); i++){
             confusionMatrixData.add(c45.traverseTreeForTesting(root, trainingDataset.get(i)));
         }
-        c45.confusionMatrix(confusionMatrixData);
+        int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
+        System.out.println(c45.errorRate(errorRateData)+"%");
         System.out.println("--------------------------------------------------------------");
 
         // Print tree
