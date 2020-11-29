@@ -211,7 +211,6 @@ public class Algorithm {
                 total+=i;
             }
         }
-        System.out.println("error = "+error +"/ total = "+total);
         double errorRate = (double) error / total;
         return errorRate;
     }

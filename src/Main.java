@@ -22,53 +22,57 @@ public class Main {
 
         // Remove ID column
         DataPreProcess.removeColumnFromDataSet("beer_id");
-
-        // Print out data
-        //System.out.println(dataSet);
-
-        //Divide data into thirds, one third is testing, two thirds is training.
-        DataPreProcess.datasetDivision();
-        //System.out.println(testingDataset.size());
-        //System.out.println(trainingDataset.size());
-        //System.out.println(dataSet.size());
-
-        // Test data to find threshold
-        ArrayList<Attribute> resultsData = new ArrayList<>(Arrays.asList(
-                new Attribute("Style","ale"),
-                new Attribute("Style","ale"),
-                new Attribute("Style","stout"),
-                new Attribute("Style","ale"),
-                new Attribute("Style","lager"),
-                new Attribute("Style","stout")));
-
-        Column column = new Column(1, resultsData);
-        //System.out.println("Col: "+column);
-        ArrayList<Double> data = new ArrayList<>(Arrays.asList(1d, 5d, 2d, 5d, 8d, 4d));
-        //System.out.println(data);
-        //System.out.println("threshold: " + MathUtils.calculateOptimalThreshold(data, column));
-
-        //Algorithm
-        Algorithm c45 = new Algorithm();
-        //Convert to columns
-        ArrayList<Column> columns = new ArrayList<>();
-
-        for(int i =0; i < dataSet.get(0).attributes.size(); i++){
-            Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(dataSet, i));
-            columns.add(col);
+        //Case with best accuracy
+        double bestAccuracy = 0.0;
+        //Loop 10 times as per assignment requirements
+        for(int i = 0; i < 10; i++){
+            System.out.println("Starting dataset division for dataset Split number :"+i);
+            //Divide data into thirds, one third is testing, two thirds is training.
+            DataPreProcess.datasetDivision();
+            //Algorithm instance creation
+            Algorithm c45 = new Algorithm();
+            //Convert to columns
+            System.out.println("Converting rows into columns");
+            ArrayList<Column> columns = new ArrayList<>();
+            for(int colID =0; colID < dataSet.get(0).attributes.size(); colID++){
+                Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(dataSet, colID));
+                columns.add(col);
+            }
+            System.out.println("Starting tree building algorithm");
+            //Get root node from algorithm
+            Node root = c45.startTreeBuilding(3, columns);
+            //Create arraylist for confusionMatrix data
+            ArrayList<ArrayList> confusionMatrixData = new ArrayList<>();
+            //Test with testing data
+            System.out.println("Testing tree model with training dataset");
+            for(int cf = 0; cf < testingDataset.size(); cf++){
+                confusionMatrixData.add(c45.traverseTreeForTesting(root, testingDataset.get(cf)));
+            }
+            System.out.println("Presenting Confusion Matrix of dataset: "+i+"\n");
+            int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
+            double errorRate = c45.errorRate(errorRateData);
+            System.out.println("\n"+"Training Dataset "+i+" has an error rate of "+errorRate+"%"+"\n");
+            if(bestAccuracy < ((double)100-errorRate)){
+                bestAccuracy = ((double)100-errorRate);
+            }
         }
+        System.out.println("\n"+"Model with best accuracy was with: "+bestAccuracy+"%");
 
-        Node root = c45.startTreeBuilding(3, columns);
-        ArrayList<ArrayList> confusionMatrixData = new ArrayList<>();
-        for(int i = 0; i < trainingDataset.size(); i++){
-            confusionMatrixData.add(c45.traverseTreeForTesting(root, trainingDataset.get(i)));
-        }
-        int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
-        System.out.println(c45.errorRate(errorRateData)+"%");
+
+
+
+
+
+
+
+
+
+
         System.out.println("--------------------------------------------------------------");
 
         // Print tree
-            System.out.println("                         " + root.getName());
-            printNode(root, 1);
+            //System.out.println("                         " + root.getName());
+            //printNode(root, 1);
 
 
 
@@ -86,6 +90,7 @@ public class Main {
         if(node.getLeftChild() != null)
         printNode(node.getLeftChild(), depth+1);
     }
+
 
 }
 
