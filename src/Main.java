@@ -58,7 +58,11 @@ public class Main {
         }
 
         Node root = c45.startTreeBuilding(3, columns);
-        System.out.println(c45.traverseTreeForTesting(root, trainingDataset.get(0)));
+        ArrayList<ArrayList> confusionMatrixData = new ArrayList<>();
+        for(int i = 0; i < trainingDataset.size(); i++){
+            confusionMatrixData.add(c45.traverseTreeForTesting(root, trainingDataset.get(i)));
+        }
+        c45.confusionMatrix(confusionMatrixData);
         System.out.println("--------------------------------------------------------------");
 
         // Print tree

@@ -163,4 +163,44 @@ public class Algorithm {
         return new ArrayList(Arrays.asList(testNode.getName(), rowToTest.attributes.get(3).getValue()));
 
     }
+
+    public void confusionMatrix(ArrayList<ArrayList> input){
+        int [][] confusionMatrix = new int[3][3];
+        //Set up confusion Matrix
+        for(int i = 0; i < input.size(); i++){
+            if(input.get(i).get(1).equals("ale")){
+                if(input.get(i).get(0).equals("ale")){
+                    confusionMatrix[0][0] += 1;
+                }else if(input.get(i).get(0).equals("stout")){
+                    confusionMatrix[1][0] += 1;
+                }else if(input.get(i).get(0).equals("lager")){
+                    confusionMatrix[1][0] += 1;
+                }
+            }else if(input.get(i).get(1).equals("stout")) {
+                if (input.get(i).get(0).equals("ale")) {
+                    confusionMatrix[0][1] += 1;
+                } else if (input.get(i).get(0).equals("stout")) {
+                    confusionMatrix[1][1] += 1;
+                } else if (input.get(i).get(0).equals("lager")) {
+                    confusionMatrix[1][1] += 1;
+                }
+            }else if(input.get(i).get(1).equals("lager")) {
+                if (input.get(i).get(0).equals("ale")) {
+                    confusionMatrix[0][2] += 1;
+                } else if (input.get(i).get(0).equals("stout")) {
+                    confusionMatrix[1][2] += 1;
+                } else if (input.get(i).get(0).equals("lager")) {
+                    confusionMatrix[1][2] += 1;
+                }
+            }
+
+        }
+        //Print confusion matrix
+        System.out.println("      [ale, stout, lager]");
+        System.out.println("[ale]   "+Arrays.toString(confusionMatrix[0]));
+        System.out.println("[stout] " +Arrays.toString(confusionMatrix[1]));
+        System.out.println("[lager] " +Arrays.toString(confusionMatrix[2]));
+        return;
+    }
+
 }
