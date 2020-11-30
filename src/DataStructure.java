@@ -9,6 +9,10 @@ public abstract class DataStructure {
         this.attributes = attributes;
         this.ID = ID;
     }
+    public DataStructure(int ID){
+        this.ID = ID;
+        attributes = new ArrayList<>();
+    }
 
     public int getID() {
         return ID;
@@ -36,6 +40,6 @@ public abstract class DataStructure {
 
     @Override
     public String toString() {
-        return "\nRow ID:" + this.ID + " contains attributes:\n" + this.attributes;
+        return "\nID:" + this.ID + " contains attributes:\n" + this.attributes;
     }
 }
