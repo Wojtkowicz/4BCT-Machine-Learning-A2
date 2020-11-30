@@ -52,8 +52,8 @@ public class Main {
             int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
             double errorRate = c45.errorRate(errorRateData);
             System.out.println("\n"+"Training Dataset "+i+" has an error rate of "+errorRate+"%"+"\n");
-            if(bestAccuracy < ((double)100-errorRate)){
-                bestAccuracy = ((double)100-errorRate);
+            if(bestAccuracy < ((double)100-(errorRate*100))){
+                bestAccuracy = ((double)100-(errorRate*100));
             }
         }
         System.out.println("\n"+"Model with best accuracy was with: "+bestAccuracy+"%");
