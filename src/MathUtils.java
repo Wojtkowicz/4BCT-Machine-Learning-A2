@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MathUtils {
-
+    //Author = Jakub Wojtkowicz
     // Calculates Entropy of the three possible results (ale, lager stout)
     public static double calculateEntropy(final double aleCount, final double lagerCount, final double stoutCount) {
         double totalCount = aleCount + lagerCount + stoutCount;
@@ -21,7 +21,7 @@ public class MathUtils {
             return answer;
         }
     }
-
+    //Author = Jakub Wojtkowicz
     // Calculates Entropy of the two possible results (no, yes)
     public static double calculateSingularEntropy(final double noCount, final double yesCount) {
         double totalCount = noCount + yesCount;
@@ -40,7 +40,7 @@ public class MathUtils {
     }
 
 
-
+    //Author = Jakub Wojtkowicz
     public static double calculateInformationGain(final double value, final ArrayList<Double> column, final ArrayList<String> resultsColumn) {
         int aleCountLessThan = 0;
         int lagerCountLessThan = 0;
@@ -132,7 +132,7 @@ public class MathUtils {
         // Calculate and return information gain
         return (globalEntropy - (entropyLessThanValueCount / columnSize) * (entropyLessThanValue) - (entropyMoreThanValueCount / columnSize) * (entropyMoreThanValue));
     }
-
+    //Author = Jakub Wojtkowicz
     // Goes through each value and performs information gain calculation on it then returns the highest value
     public static ArrayList<Double> calculateOptimalThreshold(final ArrayList<Double> data, final Column column) {
         double highestInformationGain = 0;
@@ -153,12 +153,12 @@ public class MathUtils {
         // Return highest gain / threshold
         return new ArrayList(Arrays.asList(highestInformationGainOrigin, highestInformationGain));
     }
-
+    //Author = Jakub Wojtkowicz
     // Calculates log base 2
     public static double log2(double x) {
         return (Math.log(x) / Math.log(2));
     }
-
+    //Author = Jaroslav Kucera
     public static int countAttribute(Column data, String attributeToCount){
         int numAttribute = 0;
         for(int i =0; i < data.attributes.size(); i++){
@@ -168,7 +168,7 @@ public class MathUtils {
         }
         return numAttribute;
     }
-
+    //Author = Jaroslav Kucera
     //Calculate the information gain ratio based on arraylist of a column of attributes and column of class attributes
     public static ArrayList<Double> calculateInformationGainRatio(final ArrayList<Double> data, final Column column){
 
@@ -196,7 +196,7 @@ public class MathUtils {
         }
         return new ArrayList(Arrays.asList(highestInformationGainRatioOrigin, highestInformationGainRatio));
     }
-
+    //Author = Jaroslav Kucera
     //Method for calculating split information based on column of double attributes and threshold value
     public static double calculateSplitInformation(final ArrayList<Double> column, final Double threshold){
 

@@ -1,6 +1,8 @@
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +17,8 @@ public class Main {
     //global variable to store dataset to be used for testing
     public static ArrayList<Row> testingDataset = new ArrayList<>();
 
+    public static String output = new String();
+    //Author = Jaroslav Kucera
     public static void main(String[] args) {
         // Create mock file
         File testFile = new File("src/testFile.txt");
@@ -26,44 +30,58 @@ public class Main {
         DataPreProcess.removeColumnFromDataSet("beer_id");
         //Case with best accuracy
         double bestAccuracy = 0.0;
+        output = new String();
         //Loop 10 times as per assignment requirements
         for (int i = 0; i < 10; i++) {
+            output += "Starting dataset division for dataset Split number :" + i+"\n";
             System.out.println("Starting dataset division for dataset Split number :" + i);
             //Divide data into thirds, one third is testing, two thirds is training.
             DataPreProcess.datasetDivision();
             //Algorithm instance creation
             Algorithm c45 = new Algorithm();
             //Convert to columns
+            output += "Converting rows into columns\n";
             System.out.println("Converting rows into columns");
             ArrayList<Column> columns = new ArrayList<>();
             for (int colID = 0; colID < dataSet.get(0).attributes.size(); colID++) {
                 Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(dataSet, colID));
                 columns.add(col);
             }
-            System.out.println("Starting tree building algorithm");
+            output += "Starting tree building anlgorithm\n";
+            System.out.println("Starting tree building anlgorithm");
             //Get root node from algorithm
             Node root = c45.startTreeBuilding(3, columns);
             //Create arraylist for confusionMatrix data
             ArrayList<ArrayList> confusionMatrixData = new ArrayList<>();
             //Test with testing data
+            output += "Testing tree model with training dataset\n";
             System.out.println("Testing tree model with training dataset");
             for (int cf = 0; cf < testingDataset.size(); cf++) {
                 confusionMatrixData.add(c45.traverseTreeForTesting(root, testingDataset.get(cf)));
             }
+            output += "Presenting Confusion Matrix of dataset: " + i + "\n\n";
             System.out.println("Presenting Confusion Matrix of dataset: " + i + "\n");
             int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
             double errorRate = c45.errorRate(errorRateData);
+            output += "\n" + "Training Dataset " + i + " has an error rate of " + (errorRate*100) + "%" + "\n\n";
             System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + (errorRate*100) + "%" + "\n");
             if (bestAccuracy < ((double) 100 - (errorRate*100))) {
                 bestAccuracy = ((double) 100 - (errorRate*100));
             }
             //Print tree
+            output += "Created model visualisation:\n";
             System.out.println("Created model visualisation:");
             printTree(root);
         }
+        output+="\n" + "Model with best accuracy was with: " + bestAccuracy + "%\n";
         System.out.println("\n" + "Model with best accuracy was with: " + bestAccuracy + "%");
+        try(PrintWriter outputFile = new PrintWriter("Results.txt")){
+            outputFile.println(output);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-
+    //Author = Jakub Wojtkowicz
     //Prints a tree visual given its root node
     private static void printTree(final Node root) {
         List<String> treeNodes = new ArrayList<>();
@@ -128,11 +146,12 @@ public class Main {
             }
             int lineLength = lineToPrint.length();
             lineToPrint = " ".repeat(85 - (lineLength / 2) + 40) + lineToPrint;
+            output+=lineToPrint+"\n\n\n";
             System.out.println(lineToPrint);
             System.out.println("\n\n");
         }
     }
-
+    //Author = Jakub Wojtkowicz
     // Traverses a tree via level order traversal given the root node and an empty
     // list that is written to when a new node is traversed. It writes an X to the list
     // as a placeholder to signify a new level of a tree when it is reached
@@ -143,7 +162,7 @@ public class Main {
             treeNodes.add("X");
         }
     }
-
+    //Author = Jakub Wojtkowicz
     // Recursive function that traverses the tree and writes to the tree nodes list all new nodes traversed
     private static void recordTreeLevelNodes(final Node node, int depth, List<String> treeNodes) {
         if (node == null)
@@ -155,7 +174,7 @@ public class Main {
             recordTreeLevelNodes(node.getRightChild(), depth - 1, treeNodes);
         }
     }
-
+    //Author = Jakub Wojtkowicz
     // calculates the max depth of a tree recursively given the tree root
     private static int getTreeDepth(final Node root) {
         if (root == null)

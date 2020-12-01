@@ -1,3 +1,4 @@
+//Author = Jaroslav Kucera
 public class Attribute {
     //Class used holding attribute values of rows
 

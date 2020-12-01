@@ -1,3 +1,4 @@
+//Author = Jaroslav Kucera
 public class Node {
 
     private String name;

@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//Author =  Jaroslav Kucera
 public abstract class DataStructure {
 
     public ArrayList<Attribute> attributes;
