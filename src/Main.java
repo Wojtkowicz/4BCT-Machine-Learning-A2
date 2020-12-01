@@ -53,9 +53,9 @@ public class Main {
             System.out.println("Presenting Confusion Matrix of dataset: " + i + "\n");
             int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
             double errorRate = c45.errorRate(errorRateData);
-            System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + errorRate + "%" + "\n");
-            if (bestAccuracy < ((double) 100 - errorRate)) {
-                bestAccuracy = ((double) 100 - errorRate);
+            System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + (errorRate*100) + "%" + "\n");
+            if (bestAccuracy < ((double) 100 - (errorRate*100))) {
+                bestAccuracy = ((double) 100 - (errorRate*100));
             }
             //Print tree
             System.out.println("Created model visualisation:");

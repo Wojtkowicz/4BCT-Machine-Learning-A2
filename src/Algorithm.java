@@ -15,7 +15,7 @@ public class Algorithm {
         //Copy current dataset to use in this iteration
         ArrayList<Column> currentDataset = dataSet;
         //Exit case for recursion
-        if (currentDataset.get(0).attributes.size() <= 1 || depth >= 7) {
+        if (currentDataset.get(0).attributes.size() <= 1 || depth >= 5) {
             System.out.println("Exit Condition 1:" + currentDataset.get(0).attributes.size() + " "+depth);
             return createLeafNode(currentDataset);
         }
