@@ -1,5 +1,6 @@
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,40 +30,55 @@ public class Main {
     public static void main(String[] args) {
         // Creating GUI frame
         frame = new JFrame("C4.5 Machine Learning Algorithm Implementation");
-        frame.setSize(600,600);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         frame.setResizable(false);
+
         // Creating a text box for results
         JTextField textBox = new JTextField();
-        textBox.setSize(400,200);
-        textBox.setLocation(100,300);
+        textBox.setSize(400, 200);
+        textBox.setLocation(100, 320);
         frame.add(textBox);
-        // Creating a text box for input of file source
-        JTextField textBoxFileInput = new JTextField();
-        textBoxFileInput.setSize(300,25);
-        textBoxFileInput.setLocation(200,250);
-        textBoxFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
-        frame.add(textBoxFileInput);
+
+        // Creating a text box for input of training file source
+        JTextField textBoxTrainingFileInput = new JTextField();
+        textBoxTrainingFileInput.setSize(150, 25);
+        textBoxTrainingFileInput.setLocation(110, 260);
+        textBoxTrainingFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
+        frame.add(textBoxTrainingFileInput);
+
+        // Creating a text box for input of testing file source
+        JTextField textBoxTestFileInput = new JTextField();
+        textBoxTestFileInput.setSize(150, 25);
+        textBoxTestFileInput.setLocation(390, 260);
+        textBoxTestFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
+        frame.add(textBoxTestFileInput);
+
         // Adding a button to run the algorithm
         JButton button = new JButton("Run Algorithm");
         int buttonWidth = 200;
-        button.setBounds((frame.getBounds().width/2 - buttonWidth/2) , 30,  200, 30);
+        button.setBounds((frame.getBounds().width / 2 - buttonWidth / 2), 10, 200, 30);
         frame.add(button);
-        // Making Radio Buttons to select a file
+
+        // Label for training radio buttons
+        Label trainingSetLabel = new Label("Training/Testing Set");
+        trainingSetLabel.setBounds(20, 90, 200, 20);
+        frame.add(trainingSetLabel);
+
+        // Making Radio Buttons to select a training file
         JRadioButton r1 = new JRadioButton("beer.txt");
-        r1.setBounds(50,100, 150,20);
+        r1.setBounds(20, 110, 150, 20);
         frame.add(r1);
         JRadioButton r2 = new JRadioButton("beer_training.txt");
-        r2.setBounds(50,150, 150,20);
+        r2.setBounds(20, 160, 150, 20);
         frame.add(r2);
         JRadioButton r3 = new JRadioButton("beer_test.txt");
-        r3.setBounds(50,200, 150,20);
+        r3.setBounds(20, 210, 150, 20);
         frame.add(r3);
         JRadioButton r4 = new JRadioButton("Import File");
-        r4.setBounds(50,250, 150,20);
+        r4.setBounds(20, 260, 90, 20);
         frame.add(r4);
-
         ButtonGroup trainingFileRadioButtons = new ButtonGroup();
         trainingFileRadioButtons.add(r1);
         trainingFileRadioButtons.add(r2);
@@ -70,37 +86,114 @@ public class Main {
         trainingFileRadioButtons.add(r4);
         r1.setSelected(true);
 
+        // Label for training radio buttons
+        Label testingSetLabel = new Label("Testing Set");
+        testingSetLabel.setBounds(300, 90, 200, 20);
+        frame.add(testingSetLabel);
+
+        // Making Radio Buttons to select a testing file
+        JRadioButton r5 = new JRadioButton("beer.txt");
+        r5.setBounds(300, 110, 150, 20);
+        r5.setEnabled(false);
+        frame.add(r5);
+        JRadioButton r6 = new JRadioButton("beer_training.txt");
+        r6.setBounds(300, 160, 150, 20);
+        r6.setEnabled(false);
+        frame.add(r6);
+        JRadioButton r7 = new JRadioButton("beer_test.txt");
+        r7.setBounds(300, 210, 150, 20);
+        frame.add(r7);
+        r7.setEnabled(false);
+        JRadioButton r8 = new JRadioButton("Import File");
+        r8.setBounds(300, 260, 90, 20);
+        r8.setEnabled(false);
+        frame.add(r8);
+        ButtonGroup testingFileRadioButtons = new ButtonGroup();
+        testingFileRadioButtons.add(r5);
+        testingFileRadioButtons.add(r6);
+        testingFileRadioButtons.add(r7);
+        testingFileRadioButtons.add(r8);
+        r1.setSelected(true);
+
+        // Making a toggle button to switch between one and 2 files
+        JToggleButton twoFileSwitch = new JToggleButton("Enable 2 Files");
+        twoFileSwitch.setBounds((frame.getBounds().width / 2 - buttonWidth / 2), 50, 200, 30);
+        twoFileSwitch.setSelected(false);
+        frame.add(twoFileSwitch);
+        twoFileSwitch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Disable the test file buttons if the dual file option isn't selected
+                r5.setEnabled(!r5.isEnabled());
+                r6.setEnabled(!r6.isEnabled());
+                r7.setEnabled(!r7.isEnabled());
+                r8.setEnabled(!r8.isEnabled());
+
+                if (twoFileSwitch.isSelected()) {
+                    twoFileSwitch.setText("Disable 2 Files");
+                } else {
+                    twoFileSwitch.setText("Enable 2 Files");
+                }
+            }
+        });
+
         // Making all frame components visible
         frame.setVisible(true);
         // Adding listener for the button that runs the algorithm
-        button.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                // Pass in user selected file name
-                if(r1.isSelected()){
-                    trainModelAndTest("src/beer.txt");
-                }
-                else if(r2.isSelected()){
-                    trainModelAndTest("src/beer_training.txt");
-                }
-                else if(r3.isSelected()){
-                    trainModelAndTest("src/beer_test.txt");
-                }
-                else if(r4.isSelected()){
-                    String location = textBoxFileInput.getText();
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String trainingFile = "";
+                String testFile = "";
+                boolean dualFileOption = twoFileSwitch.isSelected();
 
+                // Find training file selected
+                if (r4.isSelected()) {
+                    String location = textBoxTestFileInput.getText();
                     // Check to see if the file exists
-                    try{
+                    try {
                         new FileReader(location);
-                    }catch (FileNotFoundException ex){
+                    } catch (FileNotFoundException ex) {
                         JOptionPane.showMessageDialog(frame, "Invalid File Location");
                         resetAlgorithm();
                         return;
                     }
-
-                    trainModelAndTest(textBoxFileInput.getText());
-
+                    trainingFile = textBoxTestFileInput.getText();
+                } else {
+                    // Find training file selection
+                    if (r1.isSelected()) {
+                        trainingFile = "src/beer.txt";
+                    } else if (r2.isSelected()) {
+                        trainingFile = "src/beer_training.txt";
+                    } else if (r3.isSelected()) {
+                        trainingFile = "src/beer_test.txt";
+                    }
                 }
 
+                // If the user passes in two files
+                if (dualFileOption) {
+                    // Find Test File selected
+                    if (r8.isSelected()) {
+                        String location = textBoxTestFileInput.getText();
+                        // Check to see if the file exists
+                        try {
+                            new FileReader(location);
+                        } catch (FileNotFoundException ex) {
+                            JOptionPane.showMessageDialog(frame, "Invalid File Location");
+                            resetAlgorithm();
+                            return;
+                        }
+                        testFile = textBoxTestFileInput.getText();
+                    } else {
+                        // Find training file selection
+                        if (r5.isSelected()) {
+                            testFile = "src/beer.txt";
+                        } else if (r6.isSelected()) {
+                            testFile = "src/beer_training.txt";
+                        } else if (r7.isSelected()) {
+                            testFile = "src/beer_test.txt";
+                        }
+                    }
+                }
+                trainModelAndTest(trainingFile, testFile, dualFileOption);
                 textBox.setText("Classification success rate: " + testingResults);
             }
         });
@@ -108,30 +201,54 @@ public class Main {
     }
 
     //Author = Jaroslav Kucera
-    public static void trainModelAndTest(final String fileName){
-        // Create mock file
-        File testFile = new File(fileName);
+    public static void trainModelAndTest(final String trainingFileName, final String testFileName, final boolean dualFileOption) {
+        // If dual file option selected se the training and dta sets
+        if (dualFileOption) {
+            // Create training file
+            File trainingFile = new File(trainingFileName);
+            // Read in the user input file
+            DataPreProcess.ReadInData(trainingFile);
+            // Remove ID column
+            DataPreProcess.removeColumnFromDataSet("beer_id");
+            // Set trainingDataSet to DataSet
+            trainingDataset = dataSet;
+            // Reset DataSet
+            headings = new ArrayList<>(Arrays.asList("calorific_value", "nitrogen", "turbidity", "style", "alcohol", "sugars", "bitterness", "beer_id", "colour", "degree_of_fermentation"));
+            dataSet = new ArrayList<>();
+            // Create test file
+            File testFile = new File(testFileName);
+            // Read in the user input file
+            DataPreProcess.ReadInData(testFile);
+            // Remove ID column
+            DataPreProcess.removeColumnFromDataSet("beer_id");
+            // Set testDataSet to DataSet
+            testingDataset = dataSet;
+        } else {
+            // Create training file
+            File trainingFile = new File(trainingFileName);
+            // Read in the user input file
+            DataPreProcess.ReadInData(trainingFile);
+            // Remove ID column
+            DataPreProcess.removeColumnFromDataSet("beer_id");
+        }
 
-        // Read in the user input file
-        DataPreProcess.ReadInData(testFile);
-
-        // Remove ID column
-        DataPreProcess.removeColumnFromDataSet("beer_id");
         //Case with best accuracy
         double bestAccuracy = 0.0;
-        output = new String();
+        output = "";
         //Loop 10 times as per assignment requirements
         for (int i = 0; i < 10; i++) {
-            output += "Starting dataset division for dataset Split number :" + i+"\n";
+            output += "Starting dataset division for dataset Split number :" + i + "\n";
             System.out.println("Starting dataset division for dataset Split number :" + i);
-            // Check for invalid file contents
-            try {
-                //Divide data into thirds, one third is testing, two thirds is training.
-                DataPreProcess.datasetDivision();
-            }catch (IllegalArgumentException ex){
-                JOptionPane.showMessageDialog(frame, "Invalid File Contents");
-                resetAlgorithm();
-                return;
+            if (!dualFileOption) {
+                // Check for invalid file contents
+                try {
+                    //Divide data into thirds, one third is testing, two thirds is training.
+                    DataPreProcess.datasetDivision();
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid File Contents");
+                    resetAlgorithm();
+                    return;
+                }
             }
             //Algorithm instance creation
             Algorithm c45 = new Algorithm();
@@ -159,20 +276,20 @@ public class Main {
             System.out.println("Presenting Confusion Matrix of dataset: " + i + "\n");
             int[][] errorRateData = c45.confusionMatrix(confusionMatrixData);
             double errorRate = c45.errorRate(errorRateData);
-            output += "\n" + "Training Dataset " + i + " has an error rate of " + (errorRate*100) + "%" + "\n\n";
-            System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + (errorRate*100) + "%" + "\n");
-            if (bestAccuracy < ((double) 100 - (errorRate*100))) {
-                bestAccuracy = ((double) 100 - (errorRate*100));
+            output += "\n" + "Training Dataset " + i + " has an error rate of " + (errorRate * 100) + "%" + "\n\n";
+            System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + (errorRate * 100) + "%" + "\n");
+            if (bestAccuracy < ((double) 100 - (errorRate * 100))) {
+                bestAccuracy = ((double) 100 - (errorRate * 100));
             }
             //Print tree
             output += "Created model visualisation:\n";
             System.out.println("Created model visualisation:");
             printTree(root);
         }
-        output+="\n" + "Model with best accuracy was with: " + bestAccuracy + "%\n";
+        output += "\n" + "Model with best accuracy was with: " + bestAccuracy + "%\n";
         System.out.println("\n" + "Model with best accuracy was with: " + bestAccuracy + "%");
         testingResults = String.valueOf(bestAccuracy);
-        try(PrintWriter outputFile = new PrintWriter("Results.txt")){
+        try (PrintWriter outputFile = new PrintWriter("Results.txt")) {
             outputFile.println(output);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -182,7 +299,7 @@ public class Main {
 
     //Author = Jakub Wojtkowicz
     // Resets global variables for the algorithm
-    private static void resetAlgorithm(){
+    private static void resetAlgorithm() {
         dataSet = new ArrayList<>();
         trainingDataset = new ArrayList<>();
         testingDataset = new ArrayList<>();
@@ -254,11 +371,12 @@ public class Main {
             }
             int lineLength = lineToPrint.length();
             lineToPrint = " ".repeat(85 - (lineLength / 2) + 40) + lineToPrint;
-            output+=lineToPrint+"\n\n\n";
+            output += lineToPrint + "\n\n\n";
             System.out.println(lineToPrint);
             System.out.println("\n\n");
         }
     }
+
     //Author = Jakub Wojtkowicz
     // Traverses a tree via level order traversal given the root node and an empty
     // list that is written to when a new node is traversed. It writes an X to the list
@@ -270,6 +388,7 @@ public class Main {
             treeNodes.add("X");
         }
     }
+
     //Author = Jakub Wojtkowicz
     // Recursive function that traverses the tree and writes to the tree nodes list all new nodes traversed
     private static void recordTreeLevelNodes(final Node node, int depth, List<String> treeNodes) {
@@ -282,6 +401,7 @@ public class Main {
             recordTreeLevelNodes(node.getRightChild(), depth - 1, treeNodes);
         }
     }
+
     //Author = Jakub Wojtkowicz
     // calculates the max depth of a tree recursively given the tree root
     private static int getTreeDepth(final Node root) {
