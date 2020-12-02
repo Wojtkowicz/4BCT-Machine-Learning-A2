@@ -1,7 +1,8 @@
 
+import javax.swing.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,19 +10,68 @@ import java.util.List;
 
 public class Main {
     // global variable to store data headings
-    public static final ArrayList<String> headings = new ArrayList<>(Arrays.asList("calorific_value", "nitrogen", "turbidity", "style", "alcohol", "sugars", "bitterness", "beer_id", "colour", "degree_of_fermentation"));
+    public static ArrayList<String> headings = new ArrayList<>(Arrays.asList("calorific_value", "nitrogen", "turbidity", "style", "alcohol", "sugars", "bitterness", "beer_id", "colour", "degree_of_fermentation"));
     // global variable to store the imported Data set
     public static ArrayList<Row> dataSet = new ArrayList<>();
     //global variable to store dataset to be used for training
     public static ArrayList<Row> trainingDataset = new ArrayList<>();
     //global variable to store dataset to be used for testing
     public static ArrayList<Row> testingDataset = new ArrayList<>();
+    // Algorithm Results
+    public static String testingResults = "";
+    // Output String
+    public static String output = "";
 
-    public static String output = new String();
-    //Author = Jaroslav Kucera
+    //Author = Jakub Wojtkowicz
     public static void main(String[] args) {
+        // Creating GUI fram
+        JFrame frame = new JFrame("C4.5 Machine Learning Algorithm Implementation");
+        frame.setSize(600,600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setResizable(false);
+        // Creating a text box for results
+        JTextField textBox = new JTextField();
+        textBox.setSize(400,200);
+        textBox.setLocation(100,300);
+        frame.add(textBox);
+        // Adding a button to run the algorithm
+        JButton button = new JButton("Run Algorithm");
+        int buttonWidth = 200;
+        button.setBounds((frame.getBounds().width/2 - buttonWidth/2) , 30,  200, 30);
+        frame.add(button);
+        // Making Radio Buttons to select a file
+        JRadioButton r1 = new JRadioButton("beer.txt");
+        r1.setBounds(50,100, 150,20);
+        frame.add(r1);
+        JRadioButton r2 = new JRadioButton("beer_training.txt");
+        r2.setBounds(50,150, 150,20);
+        frame.add(r2);
+        JRadioButton r3 = new JRadioButton("beer_test.txt");
+        r3.setBounds(50,200, 150,20);
+        frame.add(r3);
+
+        ButtonGroup trainingFileRadioButtons = new ButtonGroup();
+        trainingFileRadioButtons.add(r1);
+        trainingFileRadioButtons.add(r2);
+        trainingFileRadioButtons.add(r3);
+
+        // Making all frame components visible
+        frame.setVisible(true);
+        // Adding listener for the button that runs the algorithm
+        button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                trainModelAndTest();
+                textBox.setText("Classification success rate: " + testingResults);
+            }
+        });
+
+    }
+
+    //Author = Jaroslav Kucera
+    public static void trainModelAndTest(){
         // Create mock file
-        File testFile = new File("src/testFile.txt");
+        File testFile = new File("src/beer.txt");
 
         // Read in the user input file
         DataPreProcess.ReadInData(testFile);
@@ -47,8 +97,8 @@ public class Main {
                 Column col = new Column(i, DataPreProcess.rowIntoAttributeCol(dataSet, colID));
                 columns.add(col);
             }
-            output += "Starting tree building anlgorithm\n";
-            System.out.println("Starting tree building anlgorithm");
+            output += "Starting tree building algorithm\n";
+            System.out.println("Starting tree building algorithm");
             //Get root node from algorithm
             Node root = c45.startTreeBuilding(3, columns);
             //Create arraylist for confusionMatrix data
@@ -75,12 +125,24 @@ public class Main {
         }
         output+="\n" + "Model with best accuracy was with: " + bestAccuracy + "%\n";
         System.out.println("\n" + "Model with best accuracy was with: " + bestAccuracy + "%");
+        testingResults = String.valueOf(bestAccuracy);
         try(PrintWriter outputFile = new PrintWriter("Results.txt")){
             outputFile.println(output);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        resetAlgorithm();
     }
+
+    //Author = Jakub Wojtkowicz
+    // Resets global variables for the algorithm
+    private static void resetAlgorithm(){
+        dataSet = new ArrayList<>();
+        trainingDataset = new ArrayList<>();
+        testingDataset = new ArrayList<>();
+        headings = new ArrayList<>(Arrays.asList("calorific_value", "nitrogen", "turbidity", "style", "alcohol", "sugars", "bitterness", "beer_id", "colour", "degree_of_fermentation"));
+    }
+
     //Author = Jakub Wojtkowicz
     //Prints a tree visual given its root node
     private static void printTree(final Node root) {
