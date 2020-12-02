@@ -61,7 +61,17 @@ public class Main {
         // Adding listener for the button that runs the algorithm
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                trainModelAndTest();
+                // Pass in user selected file name
+                if(r1.isSelected()){
+                    trainModelAndTest("src/beer.txt");
+                }
+                else if(r2.isSelected()){
+                    trainModelAndTest("src/beer_training.txt");
+                }
+                else if(r3.isSelected()){
+                    trainModelAndTest("src/beer_test.txt");
+                }
+
                 textBox.setText("Classification success rate: " + testingResults);
             }
         });
@@ -69,9 +79,9 @@ public class Main {
     }
 
     //Author = Jaroslav Kucera
-    public static void trainModelAndTest(){
+    public static void trainModelAndTest(final String fileName){
         // Create mock file
-        File testFile = new File("src/beer.txt");
+        File testFile = new File(fileName);
 
         // Read in the user input file
         DataPreProcess.ReadInData(testFile);
