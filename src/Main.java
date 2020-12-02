@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,11 +22,13 @@ public class Main {
     public static String testingResults = "";
     // Output String
     public static String output = "";
+    // GUI frame
+    public static JFrame frame;
 
     //Author = Jakub Wojtkowicz
     public static void main(String[] args) {
-        // Creating GUI fram
-        JFrame frame = new JFrame("C4.5 Machine Learning Algorithm Implementation");
+        // Creating GUI frame
+        frame = new JFrame("C4.5 Machine Learning Algorithm Implementation");
         frame.setSize(600,600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
@@ -35,6 +38,12 @@ public class Main {
         textBox.setSize(400,200);
         textBox.setLocation(100,300);
         frame.add(textBox);
+        // Creating a text box for input of file source
+        JTextField textBoxFileInput = new JTextField();
+        textBoxFileInput.setSize(300,25);
+        textBoxFileInput.setLocation(200,250);
+        textBoxFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
+        frame.add(textBoxFileInput);
         // Adding a button to run the algorithm
         JButton button = new JButton("Run Algorithm");
         int buttonWidth = 200;
@@ -50,11 +59,16 @@ public class Main {
         JRadioButton r3 = new JRadioButton("beer_test.txt");
         r3.setBounds(50,200, 150,20);
         frame.add(r3);
+        JRadioButton r4 = new JRadioButton("Import File");
+        r4.setBounds(50,250, 150,20);
+        frame.add(r4);
 
         ButtonGroup trainingFileRadioButtons = new ButtonGroup();
         trainingFileRadioButtons.add(r1);
         trainingFileRadioButtons.add(r2);
         trainingFileRadioButtons.add(r3);
+        trainingFileRadioButtons.add(r4);
+        r1.setSelected(true);
 
         // Making all frame components visible
         frame.setVisible(true);
@@ -70,6 +84,21 @@ public class Main {
                 }
                 else if(r3.isSelected()){
                     trainModelAndTest("src/beer_test.txt");
+                }
+                else if(r4.isSelected()){
+                    String location = textBoxFileInput.getText();
+
+                    // Check to see if the file exists
+                    try{
+                        new FileReader(location);
+                    }catch (FileNotFoundException ex){
+                        JOptionPane.showMessageDialog(frame, "Invalid File Location");
+                        resetAlgorithm();
+                        return;
+                    }
+
+                    trainModelAndTest(textBoxFileInput.getText());
+
                 }
 
                 textBox.setText("Classification success rate: " + testingResults);
@@ -95,8 +124,15 @@ public class Main {
         for (int i = 0; i < 10; i++) {
             output += "Starting dataset division for dataset Split number :" + i+"\n";
             System.out.println("Starting dataset division for dataset Split number :" + i);
-            //Divide data into thirds, one third is testing, two thirds is training.
-            DataPreProcess.datasetDivision();
+            // Check for invalid file contents
+            try {
+                //Divide data into thirds, one third is testing, two thirds is training.
+                DataPreProcess.datasetDivision();
+            }catch (IllegalArgumentException ex){
+                JOptionPane.showMessageDialog(frame, "Invalid File Contents");
+                resetAlgorithm();
+                return;
+            }
             //Algorithm instance creation
             Algorithm c45 = new Algorithm();
             //Convert to columns
