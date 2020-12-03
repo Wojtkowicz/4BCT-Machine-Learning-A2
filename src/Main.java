@@ -21,6 +21,8 @@ public class Main {
     public static ArrayList<Row> testingDataset = new ArrayList<>();
     // Algorithm Results
     public static String testingResults = "";
+    // Algorithm matrix for printing
+    public static  int[][] matrixResult = null;
     // Output String
     public static String output = "";
     // GUI frame
@@ -35,11 +37,23 @@ public class Main {
         frame.setLayout(null);
         frame.setResizable(false);
 
-        // Creating a text box for results
-        JTextField textBox = new JTextField();
-        textBox.setSize(400, 200);
-        textBox.setLocation(100, 320);
-        frame.add(textBox);
+        // Creating a text box for result info
+        JTextArea resultInfo = new JTextArea("The algorithm runs 10 times and below is the best result");
+        resultInfo.setSize(300, 20);
+        resultInfo.setLocation(150, 300);
+        frame.add(resultInfo);
+
+        // Creating a text box for classification results
+        JTextArea classificationDisplay = new JTextArea();
+        classificationDisplay.setSize(270, 20);
+        classificationDisplay.setLocation(170, 350);
+        frame.add(classificationDisplay);
+
+        // Creating a text box for matrix results
+        JTextArea matrixDisplay = new JTextArea();
+        matrixDisplay.setSize(110, 80);
+        matrixDisplay.setLocation(250, 400);
+        frame.add(matrixDisplay);
 
         // Creating a text box for input of training file source
         JTextField textBoxTrainingFileInput = new JTextField();
@@ -54,6 +68,16 @@ public class Main {
         textBoxTestFileInput.setLocation(390, 260);
         textBoxTestFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
         frame.add(textBoxTestFileInput);
+
+        // Text for single file training and testing
+        JTextArea singleFileInfo = new JTextArea(
+                " If only one file is selected the\n" +
+                        " program will randomly split your\n " +
+                        "file into thirds and use two of\n" +
+                        " them for training and one for tests");
+        singleFileInfo.setBounds(10, 10, 180, 70);
+        singleFileInfo.setEditable(false);
+        frame.add(singleFileInfo);
 
         // Adding a button to run the algorithm
         JButton button = new JButton("Run Algorithm");
@@ -194,7 +218,9 @@ public class Main {
                     }
                 }
                 trainModelAndTest(trainingFile, testFile, dualFileOption);
-                textBox.setText("Classification success rate: " + testingResults);
+                classificationDisplay.setText("Classification success rate: " + testingResults);
+                String matrix = "      [ale, stout, lager]"+"\n[ale]   "+Arrays.toString(matrixResult[0])+ "\n[stout] " +Arrays.toString(matrixResult[1]) + "\n[lager] " +Arrays.toString(matrixResult[2]);
+                matrixDisplay.setText(matrix);
             }
         });
 
@@ -235,6 +261,7 @@ public class Main {
         //Case with best accuracy
         double bestAccuracy = 0.0;
         output = "";
+        int [][] bestMatrix = null;
         //Loop 10 times as per assignment requirements
         for (int i = 0; i < 10; i++) {
             output += "Starting dataset division for dataset Split number :" + i + "\n";
@@ -280,12 +307,14 @@ public class Main {
             System.out.println("\n" + "Training Dataset " + i + " has an error rate of " + (errorRate * 100) + "%" + "\n");
             if (bestAccuracy < ((double) 100 - (errorRate * 100))) {
                 bestAccuracy = ((double) 100 - (errorRate * 100));
+                bestMatrix = errorRateData;
             }
             //Print tree
             output += "Created model visualisation:\n";
             System.out.println("Created model visualisation:");
             printTree(root);
         }
+        matrixResult = bestMatrix;
         output += "\n" + "Model with best accuracy was with: " + bestAccuracy + "%\n";
         System.out.println("\n" + "Model with best accuracy was with: " + bestAccuracy + "%");
         testingResults = String.valueOf(bestAccuracy);
