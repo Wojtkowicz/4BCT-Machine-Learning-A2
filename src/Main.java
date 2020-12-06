@@ -43,6 +43,12 @@ public class Main {
         resultInfo.setLocation(150, 300);
         frame.add(resultInfo);
 
+        // Creating a text box for saved results information
+        JTextArea savedInfo = new JTextArea("*A file is created in the program files containing full training and testing data*");
+        savedInfo.setSize(410, 20);
+        savedInfo.setLocation(105, 500);
+        frame.add(savedInfo);
+
         // Creating a text box for classification results
         JTextArea classificationDisplay = new JTextArea();
         classificationDisplay.setSize(270, 20);
