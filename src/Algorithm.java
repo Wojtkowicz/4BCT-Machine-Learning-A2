@@ -3,19 +3,19 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 public class Algorithm {
-
+    //Author = Jaroslav Kucera
     public Node startTreeBuilding(int classIndex, ArrayList<Column> dataset) {
         Column style = dataset.get(classIndex); //Put class into separate column
         dataset.remove(classIndex); //Remove class index from dataset
         dataset.add(style); //add style to the end
         return subTreeBuild(dataset, 0); //start building tree
     }
-
+    //Author = Jaroslav Kucera
     private Node subTreeBuild(ArrayList<Column> dataSet, int depth) {
         //Copy current dataset to use in this iteration
         ArrayList<Column> currentDataset = dataSet;
         //Exit case for recursion
-        if (currentDataset.get(0).attributes.size() <= 1 || depth >= 7) {
+        if (currentDataset.get(0).attributes.size() <= 1 || depth >= 4) {
             System.out.println("Exit Condition 1:" + currentDataset.get(0).attributes.size() + " "+depth);
             return createLeafNode(currentDataset);
         }
@@ -33,7 +33,7 @@ public class Algorithm {
                     doubleCol.add(Double.parseDouble(currentDataset.get(i).attributes.get(j).getValue()));
                 }
                 //0 -> origin , 1-> gain
-                ArrayList<Double> gain = MathUtils.calculateInformationGainRatio(doubleCol, currentDataset.get(currentDataset.size()-1));
+                ArrayList<Double> gain = MathUtils.calculateOptimalThreshold(doubleCol, currentDataset.get(currentDataset.size()-1));
                 if (gain.get(1) > maxGainRatio) {
                     maxGainRatio = gain.get(1);
                     attributeValueWithHighestGain = gain.get(0);
@@ -56,7 +56,7 @@ public class Algorithm {
 
         return node;
     }
-
+    //Author = Jaroslav Kucera
     private Node createLeafNode(ArrayList<Column> dataSet) {
         int aleCount = 0;
         int stoutCount = 0;
@@ -96,7 +96,7 @@ public class Algorithm {
         }
         return leaf;
     }
-
+    //Author = Jakub Wojtkowicz
     public ArrayList<Column> addBasedOnPartition(ArrayList<Column> dataSet, double splitValue, String highestGainAttribute, String Child) {
         ArrayList<Column> resultData = new ArrayList<>();
         int columnSize = dataSet.get(0).attributes.size();
@@ -136,7 +136,7 @@ public class Algorithm {
         }
         return resultData;
     }
-
+    //Author = Jaroslav Kucera
     public ArrayList<String> traverseTreeForTesting(Node root, Row rowToTest){
         Node testNode = root;
         while(testNode.getValue()!=null){
@@ -163,7 +163,7 @@ public class Algorithm {
         return new ArrayList(Arrays.asList(testNode.getName(), rowToTest.attributes.get(3).getValue()));
 
     }
-
+    //Author = Jaroslav Kucera
     public int[][] confusionMatrix(ArrayList<ArrayList> input){
         int [][] confusionMatrix = new int[3][3];
         //Set up confusion Matrix
@@ -196,13 +196,13 @@ public class Algorithm {
 
         }
         //Print confusion matrix
-        System.out.println("      [ale, stout, lager]");
-        System.out.println("[ale]   "+Arrays.toString(confusionMatrix[0]));
-        System.out.println("[stout] " +Arrays.toString(confusionMatrix[1]));
-        System.out.println("[lager] " +Arrays.toString(confusionMatrix[2]));
-
+        String out = new String();
+        out += "      [ale, stout, lager]"+"\n[ale]   "+Arrays.toString(confusionMatrix[0])+ "\n[stout] " +Arrays.toString(confusionMatrix[1]) + "\n[lager] " +Arrays.toString(confusionMatrix[2]);
+        System.out.println(out);
+        Main.output += out;
         return confusionMatrix;
     }
+    //Author = Jaroslav Kucera
     public double errorRate(int[][] confusionMatrix){
         int error = confusionMatrix[1][0] + confusionMatrix[2][0] + confusionMatrix[0][1] + confusionMatrix[2][1] + confusionMatrix[0][2] + confusionMatrix[1][2];
         int total = 0;

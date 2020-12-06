@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class DataPreProcess {
+    //Author = Jakub Wojtkowicz
     // Takes in a text file and populates the DataSet Arraylist with Row objects
     public static void ReadInData(final File file){
         int rowNumber = 1;
@@ -26,8 +27,10 @@ public class DataPreProcess {
         }
         catch (IOException ex){
             ex.printStackTrace();
+
         }
     }
+    //Author = Jakub Wojtkowicz
     // Takes in a line of text and creates a Row object
     private static Row lineToRow(final String line, final int ID){
         int index = 0;
@@ -56,7 +59,7 @@ public class DataPreProcess {
         }
         return new Row(ID, new ArrayList<>(rowAttributes));
     }
-
+    //Author = Jakub Wojtkowicz
     public static void removeColumnFromDataSet(final String columnName){
         Integer columnIndex = null;
         for(int i=0; i<Main.headings.size(); i++){
@@ -69,8 +72,9 @@ public class DataPreProcess {
         int finalColumnIndex = columnIndex;
         Main.dataSet.forEach(row -> row.removeAttribute(finalColumnIndex));
     }
-
+    //Author = Jaroslav Kucera
     public static void datasetDivision(){
+        Main.testingDataset = new ArrayList<>();
         //Get size of total dataset and get one third of it
         int numColumns = Main.dataSet.size();
         int divider = Math.round(numColumns/3);
@@ -85,7 +89,7 @@ public class DataPreProcess {
             }
         }
     }
-
+    //Author = Jaroslav Kucera
     //Returns a column arraylist of a specific row arraylist attribute index (Continuous)
     public static ArrayList<Attribute> rowIntoAttributeCol(ArrayList<Row> row, int index){
         ArrayList<Attribute> col = new ArrayList<>();
@@ -94,6 +98,7 @@ public class DataPreProcess {
         }
         return col;
     }
+    //Author = Jaroslav Kucera
     //Checks if a string contains a number
     public static boolean containsNumber(String s){
         char[] characters = s.toCharArray();
