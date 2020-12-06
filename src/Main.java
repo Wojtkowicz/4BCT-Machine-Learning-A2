@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,14 +66,14 @@ public class Main {
         JTextField textBoxTrainingFileInput = new JTextField();
         textBoxTrainingFileInput.setSize(150, 25);
         textBoxTrainingFileInput.setLocation(110, 260);
-        textBoxTrainingFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
+        textBoxTrainingFileInput.setText(String.valueOf(Paths.get("beer.txt").toAbsolutePath()));
         frame.add(textBoxTrainingFileInput);
 
         // Creating a text box for input of testing file source
         JTextField textBoxTestFileInput = new JTextField();
         textBoxTestFileInput.setSize(150, 25);
         textBoxTestFileInput.setLocation(390, 260);
-        textBoxTestFileInput.setText("C:\\Users\\jakub\\machine_learning_pair_programming\\src\\beer.txt");
+        textBoxTestFileInput.setText(String.valueOf(Paths.get("beer.txt").toAbsolutePath()));
         frame.add(textBoxTestFileInput);
 
         // Text for single file training and testing
