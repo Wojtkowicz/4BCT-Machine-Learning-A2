@@ -74,6 +74,7 @@ public class DataPreProcess {
     }
     //Author = Jaroslav Kucera
     public static void datasetDivision(){
+        Main.testingDataset = new ArrayList<>();
         //Get size of total dataset and get one third of it
         int numColumns = Main.dataSet.size();
         int divider = Math.round(numColumns/3);
